@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StableMatching", "StableMatching\StableMatching.vcxproj", "{8FE79085-3695-4451-8854-35F922651264}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StringMatching", "StringMatching\StringMatching.vcxproj", "{C8CE6702-BDCF-4EA3-ADE4-DB6695679B03}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MaxFlow", "MaxFlow\MaxFlow.vcxproj", "{49E66E0F-E5F6-4FB8-B4E9-C218431E869E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Simplex", "Simplex\Simplex.vcxproj", "{1A743D8C-8517-440F-BC0E-C8FF4D0693F3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8FE79085-3695-4451-8854-35F922651264}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8FE79085-3695-4451-8854-35F922651264}.Debug|Win32.Build.0 = Debug|Win32
+		{8FE79085-3695-4451-8854-35F922651264}.Release|Win32.ActiveCfg = Release|Win32
+		{8FE79085-3695-4451-8854-35F922651264}.Release|Win32.Build.0 = Release|Win32
+		{C8CE6702-BDCF-4EA3-ADE4-DB6695679B03}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C8CE6702-BDCF-4EA3-ADE4-DB6695679B03}.Debug|Win32.Build.0 = Debug|Win32
+		{C8CE6702-BDCF-4EA3-ADE4-DB6695679B03}.Release|Win32.ActiveCfg = Release|Win32
+		{C8CE6702-BDCF-4EA3-ADE4-DB6695679B03}.Release|Win32.Build.0 = Release|Win32
+		{49E66E0F-E5F6-4FB8-B4E9-C218431E869E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{49E66E0F-E5F6-4FB8-B4E9-C218431E869E}.Debug|Win32.Build.0 = Debug|Win32
+		{49E66E0F-E5F6-4FB8-B4E9-C218431E869E}.Release|Win32.ActiveCfg = Release|Win32
+		{49E66E0F-E5F6-4FB8-B4E9-C218431E869E}.Release|Win32.Build.0 = Release|Win32
+		{1A743D8C-8517-440F-BC0E-C8FF4D0693F3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1A743D8C-8517-440F-BC0E-C8FF4D0693F3}.Debug|Win32.Build.0 = Debug|Win32
+		{1A743D8C-8517-440F-BC0E-C8FF4D0693F3}.Release|Win32.ActiveCfg = Release|Win32
+		{1A743D8C-8517-440F-BC0E-C8FF4D0693F3}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

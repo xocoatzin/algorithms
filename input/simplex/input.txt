@@ -1,0 +1,32 @@
+# SAMPLE RUN:
+# Maximize:
+#                     15 X1 + 17 X2 + 20 X3
+# with conditions:
+#                                X2 -    X3 <= 2
+#                      3 X1 +  3 X2 + 5  X3 <= 15
+#                      3 X1 +  2 X2 +    X3 <= 8
+
+[OBJECTIVE]
+
+# maximize / minimize
+maximize
+
+[VARIABLES]
+
+# Add the coeficients for the variables here
+# Add the Right-Hand-Side (rhs) value at the end
+# x1, x2, ... xn, rhs
+
+15, 17, 20, 0
+
+[CONSTRAINTS]
+
+# Add the coeficients for the constraints here
+# Use one line for each constraint
+# Add the Right-Hand-Side (rhs) value at the end
+# r1, r2, ... rn, rhs
+
+ 0,  1, -1,  2
+ 3,  3,  5, 15
+ 3,  2,  1,  8
+

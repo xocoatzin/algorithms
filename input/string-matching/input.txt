@@ -1,0 +1,6 @@
+# (All lines starting with '#' are ignored)
+
+# The format is {pattern -> string}
+
+ababb -> ababaabbababb
+lean  -> carpets need cleaning
