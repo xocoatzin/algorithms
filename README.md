@@ -18,6 +18,8 @@ The code stubs cover the material taught within the topics:
 The code has been written by Alan Torres, University of Bristol;
 Material and teaching is delivered by Dr. Dima Damen, University of Bristol.
 
+------
+This work has been partially derived from http://jean-pierre.moreau.pagesperso-orange.fr/Cplus/simplex_cpp.txt by By *J-P Moreau, Paris* and https://github.com/Itseez/opencv/blob/master/modules/imgproc/src/gcgraph.hpp, part of the *OpenCV* Computer Vision Library.
 
 ##How to...
 
