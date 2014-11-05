@@ -9,7 +9,7 @@
 CC = gcc
 
 # define any compile-time flags
-CFLAGS = -Wall -g -std=c++11
+CFLAGS = -Wall -g
 
 # define any directories containing header files other than /usr/include
 #
@@ -23,7 +23,7 @@ LFLAGS = -L../lib
 # define any libraries to link into executable:
 #   if I want to link in libraries (libx.so or libx.a) I use the -llibname 
 #   option, something like (this will link in libmylib.so and libm.so:
-LIBS = -lstdc++
+LIBS = -lm -lstdc++
 
 # define the C source files
 SRCS = ../../../src/simplex/simplex-main.cpp \

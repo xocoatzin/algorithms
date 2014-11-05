@@ -5,6 +5,8 @@
 #include <vector>
 #include <iostream>
 #include <iomanip>
+#include <math.h>
+#include <cstdlib>
 #include "../common/io.h"
 #include "../common/string.h"
 
@@ -47,7 +49,7 @@ namespace simplex
         Problem() :
             P1(0),
             P2(0),
-            objective(Objective::VOID),
+            objective(VOID),
             error(false),
             isOptimal(false)
         {};
@@ -59,18 +61,18 @@ namespace simplex
                 NV = NumberOfVariables();
 
             // right size?
-            for (auto &c : constraints)
+            for (unsigned int j = 0; j < constraints.size(); j++)
             {
-                if (c.size() - 1 != NV)
+                if (constraints[j].size() - 1 != NV)
                 {
-                    objective = Objective::VOID;
+                    objective = VOID;
                     return;
                 }
             }
 
             for (unsigned int J = 1; J <= NV; J++)
             {
-                auto R2 = variables[J - 1];
+                double R2 = variables[J - 1];
                 TS[1][J + 1] = R2 * objective;
             }
             TS[1][1] = variables[NV] * objective;
@@ -79,7 +81,7 @@ namespace simplex
             {
                 for (unsigned int J = 1; J <= NV; J++)
                 {
-                    auto R2 = constraints[I - 1][J - 1];
+                    double R2 = constraints[I - 1][J - 1];
                     TS[I + 1][J + 1] = -R2;
                 }
                 TS[I + 1][1] = constraints[I - 1][NV];
@@ -333,9 +335,9 @@ namespace simplex
                         continue;
                     }
 
-                    for (auto &t : tokens)
+                    for (unsigned int j = 0; j < tokens.size(); j++)
                     {
-                        double v = std::stod(t);
+                        double v = atof(tokens[j].c_str());
                         p.variables.push_back(v);
                     }
 
@@ -352,9 +354,9 @@ namespace simplex
                     }
 
                     std::vector < double > vec;
-                    for (auto &t : tokens)
+                    for (unsigned int j = 0; j < tokens.size(); j++)
                     {
-                        double v = std::stod(t);
+                        double v = atof(tokens[j].c_str());
                         vec.push_back(v);
                     }
                     p.constraints.push_back(vec);

@@ -3,36 +3,21 @@
 
 #include <vector>
 #include <algorithm>
+#ifdef __GNUC__
+#include <tr1/unordered_map>
+#else
 #include <unordered_map>
+#endif
 #include <stack>
 #include <limits>
 #include <iostream>
+#include <sstream>
 
 #include "../../common/io.h"
 #include "../../common/string.h"
 
 using namespace tools;
 
-template <class T>
-inline void hash_combine(std::size_t & seed, const T & v)
-{
-    std::hash<T> hasher;
-    seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-}
-
-namespace std
-{
-    template<typename S, typename T> struct hash<pair<S, T>>
-    {
-        inline size_t operator()(const pair<S, T> & v) const
-        {
-            size_t seed = 0;
-            ::hash_combine(seed, v.first);
-            ::hash_combine(seed, v.second);
-            return seed;
-        }
-    };
-}
 
 
 typedef unsigned char uchar;
@@ -79,11 +64,11 @@ public:
     public:
         TWeight findMaxCapacity()
         {
-        	TWeight c = std::numeric_limits<TWeight>::max();
-            for (auto &k : *this)
+            TWeight c = std::numeric_limits<TWeight>::max();
+            for(typename Path::iterator k = this->begin(); k != this->end(); k++)
             {
-                if (k->weight < c)
-                    c = k->weight;
+                if ((*k)->weight < c)
+                    c = (*k)->weight;
             }
 
             return c;
@@ -108,14 +93,14 @@ private:
 
     template <typename INDEX, typename TYPE>
     class HashVector :
-        public std::unordered_map < INDEX, std::vector<TYPE> >
+        public std::tr1::unordered_map < INDEX, std::vector<TYPE> >
     {
     public:
-        typedef std::unordered_map < INDEX, std::vector<TYPE> > Base;
+        typedef std::tr1::unordered_map < INDEX, std::vector<TYPE> > Base;
 
         void append(INDEX key, TYPE val)
         {
-            auto i = this->find(key);
+            typename HashVector::iterator i = this->find(key);
             if (i == this->end())
             {
                 std::vector<TYPE> vec;
@@ -124,14 +109,14 @@ private:
             }
             else
             {
-                auto &vec = i->second;
+                std::vector<TYPE> &vec = i->second;
                 vec.push_back(val);
             }
         }
     };
 
-    typedef std::unordered_map < std::string, int > VIndex;
-    typedef std::unordered_map < Pair, int > EIndex;
+    typedef std::tr1::unordered_map < std::string, int > VIndex;
+    typedef std::tr1::unordered_map < std::string, int > EIndex;
 
     typedef HashVector< int, int > ConnectionIndex;
 
@@ -149,16 +134,12 @@ private:
         flow;
 
 public:
-    //TGraph() :
-    //    flow(0)
-    //{};
-    //
-    //TGraph(unsigned int vtxCount, unsigned int edgeCount) :
-    //    TGraph()
-    //{
-    //    vertices.reserve(vtxCount);
-    //    edges.reserve(edgeCount);
-    //};
+    std::string p2s(Pair p)
+    {
+        std::stringstream s;
+        s << p.first << "/" << p.second;
+        return s.str();
+    }
 
     TGraph(std::string filename)
     {
@@ -180,7 +161,7 @@ public:
             int weight = 0;
             try
             {
-                weight = std::stoi(tokens[1]);
+                std::istringstream(tokens[1]) >> weight;
             }
             catch (...)
             {
@@ -224,7 +205,7 @@ public:
 
     int findVertex(std::string name)
     {
-        auto i = index.find(name);
+    	VIndex::iterator i = index.find(name);
         if (i != index.end())
             return i->second;
         else
@@ -251,7 +232,7 @@ public:
 
     int findEdge(Pair id)
     {
-        auto i = edg_index.find(id);
+    	EIndex::iterator i = edg_index.find(p2s(id));
         if (i != edg_index.end())
             return i->second;
         else
@@ -326,7 +307,7 @@ public:
 
                 id = (int)edges.size() - 1;
 
-                edg_index.insert(EIndex::value_type(Pair(i, j), id));
+                edg_index.insert(EIndex::value_type(p2s(Pair(i, j)), id));
 
                 c_index.append(edge.from, edge.to);
             }
@@ -345,7 +326,7 @@ public:
 
                 id = (int)edges.size() - 1;
 
-                edg_index.insert(EIndex::value_type(Pair(j, i), id));
+                edg_index.insert(EIndex::value_type(p2s(Pair(j, i)), id));
                 c_index.append(edge.from, edge.to);
             }
         }
@@ -356,39 +337,39 @@ private:
         int from,
         int to,
         std::stack < int > &s,
-        std::unordered_map < int, bool > &seen)
+        std::tr1::unordered_map < int, bool > &seen)
     {
-        auto i = c_index.find(from);
+        typename ConnectionIndex::iterator i = c_index.find(from);
         if (i == c_index.end())
         {
             return false;
         }
 
-        auto k = seen.find(from);
+        std::tr1::unordered_map < int, bool >::iterator k = seen.find(from);
         if (k != seen.end())
         {
             return false;
         }
-        seen.insert(std::unordered_map < int, bool >::value_type(from, true));
+        seen.insert(std::tr1::unordered_map < int, bool >::value_type(from, true));
 
-        auto &nodes = i->second;
+        std::vector<int> &nodes = i->second;
 
-        for (auto &n : nodes)
+        for(unsigned int j = 0; j < nodes.size(); j++)
         {
-            Edge *edg = getEdge(from, n);
+            Edge *edg = getEdge(from, nodes[j]);
             if (!edg || !(edg->weight > 0))
                 continue;
 
-            if (n == to)
+            if (nodes[j] == to)
             {
                 s.push(to);
                 return true;
             }
             else
             {
-                if (findPath_recursive(n, to, s, seen))
+                if (findPath_recursive(nodes[j], to, s, seen))
                 {
-                    s.push(n);
+                    s.push(nodes[j]);
                     return true;
                 }
             }
@@ -403,7 +384,7 @@ private:
 public:
     Path findPath(int from, int to)
     {
-        std::unordered_map < int, bool >
+        std::tr1::unordered_map < int, bool >
             seen;
         std::stack < int >
             stack;
@@ -433,10 +414,10 @@ public:
 
     void augment(Path &p, TWeight w)
     {
-        for (auto &e : p)
+        for (typename Path::iterator e = p.begin(); e != p.end(); e++)
         {
-            e->weight -= w;
-            Edge *edg = getEdge(e->to, e->from);
+            (*e)->weight -= w;
+            Edge *edg = getEdge((*e)->to, (*e)->from);
             if (edg)
             {
                 edg->weight += w;
@@ -448,11 +429,11 @@ public:
     {
         for (unsigned int i = 0; i < edges.size(); i++)
         {
-            auto e = edges.at(i);
+            Edge &e = edges.at(i);
             if (e.type != Edge::FORWARD)
                 continue;
 
-            auto rev = getEdge(e.to, e.from);
+            Edge *rev = getEdge(e.to, e.from);
 
             std::cout
                 << "(" << e.from_name << ")"

@@ -21,7 +21,7 @@ namespace tools
 
         Reader(std::string _filename) :
             filename(_filename),
-            file(_filename),
+            file(_filename.c_str()),
             this_line(0)
         {
             if (!file.is_open())

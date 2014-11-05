@@ -5,7 +5,6 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include <unordered_map>
 #include <functional>
 #include <stack>
 #include <queue>
@@ -54,13 +53,13 @@ namespace stable_matching
 
         virtual std::size_t size() { return table.size(); }
 
-        template<typename K = TableContainer>
-        K copy_filter(std::function<bool(iterator)> filter)
+        template<typename K>
+        K copy_filter_begins_with(std::string prefix)
         {
             K t;
             for (iterator it = table.begin(); it != table.end(); it++)
             {
-                if (filter(it))
+                if (tools::beginsWith(it->first, prefix))
                     t.add(it->first, it->second);
             }
 
@@ -241,16 +240,16 @@ namespace stable_matching
 
         private:
             std::string couple_id;
-            Population& _population;
+            Population* _population;
 
             Person(std::string _id, std::vector<std::string> _preferences, Population& _pop) :
                 all_preferences(_preferences),
                 id(_id),
                 couple_id(""),
-                _population(_pop)
+                _population(&_pop)
             {
-                for (auto &p : _preferences)
-                    preferences.push(p);
+                for (unsigned int j = 0; j < _preferences.size(); j++)
+                    preferences.push(_preferences[j]);
             };
 
         public:
@@ -262,58 +261,58 @@ namespace stable_matching
                 ID id = preferences.front();
                 preferences.pop();
 
-                return _population.find(id);
+                return _population->find(id);
             }
 
             std::string name()
             {
-                return _population.members.get(id);
+                return _population->members.get(id);
             }
 
             Response propose(Person *p)
             {
                 if (p)
                     return propose(*p);
-                return Response::REJECT_PROPOSAL;
+                return REJECT_PROPOSAL;
             }
 
             Response propose(Person &p)
             {
-                for (auto &pref : p.all_preferences)
+                for (unsigned int j = 0; j < p.all_preferences.size(); j++)
                 {
-                    if (pref.compare(id) == 0)
+                    if (p.all_preferences[j].compare(id) == 0)
                     {
                         //break relationship
                         if (!p.couple_id.empty())
                         {
-                            std::cout << _population.members.get(p.id) << " dumps " << _population.members.get(p.couple_id);
+                            std::cout << _population->members.get(p.id) << " dumps " << _population->members.get(p.couple_id);
                             if (tools::beginsWith(p.couple_id, "m"))
                             {
-                                _population.single_men.push(p.couple_id);
+                                _population->single_men.push(p.couple_id);
                             }
                             else if (tools::beginsWith(p.couple_id, "f"))
                             {
-                                _population.single_women.push(p.couple_id);
+                                _population->single_women.push(p.couple_id);
                             }
-                            Person *per = _population.find(p.couple_id);
+                            Person *per = _population->find(p.couple_id);
                             if (per) per->couple_id = "";
                         }
                         else
                         {
-                            std::cout << _population.members.get(p.id) << " is single";
+                            std::cout << _population->members.get(p.id) << " is single";
                         }
 
                         p.couple_id = id;
                         couple_id = p.id;
-                        return Response::ACCEPT_PROPOSAL;
+                        return ACCEPT_PROPOSAL;
                     }
-                    else if (pref.compare(p.couple_id) == 0)
+                    else if (p.all_preferences[j].compare(p.couple_id) == 0)
                     {
-                        std::cout << _population.members.get(p.id) << " prefers " << _population.members.get(p.couple_id);
-                        return Response::REJECT_PROPOSAL;
+                        std::cout << _population->members.get(p.id) << " prefers " << _population->members.get(p.couple_id);
+                        return REJECT_PROPOSAL;
                     }
                 }
-                return Response::REJECT_PROPOSAL;
+                return REJECT_PROPOSAL;
             };
         };
 
@@ -329,19 +328,23 @@ namespace stable_matching
             members(m),
             pref(p)
         {
-            for (auto &p : members)
+#ifdef __GNUC__
+            for (typename Members::iterator p = members.begin(); p != members.end(); p++)
+#else
+            for (Members::iterator p = members.begin(); p != members.end(); p++)
+#endif
             {
-                Person prs(p.first, pref.get(p.first), *this);
+                Person prs((*p).first, pref.get((*p).first), *this);
 
-                if (tools::beginsWith(p.first, "m"))
+                if (tools::beginsWith((*p).first, "m"))
                 {
                     men.push_back(prs);
-                    single_men.push(p.first);
+                    single_men.push((*p).first);
                 }
-                else if (tools::beginsWith(p.first, "f"))
+                else if (tools::beginsWith((*p).first, "f"))
                 {
                     women.push_back(prs);
-                    single_women.push(p.first);
+                    single_women.push((*p).first);
                 }
             }
         };
@@ -354,10 +357,10 @@ namespace stable_matching
 
             if (person_list)
             {
-                for (auto &p : *person_list)
+                for (unsigned int j = 0; j < (person_list)->size(); j++)
                 {
-                    if (id.compare(p.id) == 0)
-                        return &p;
+                    if (id.compare((*person_list)[j].id) == 0)
+                        return &(*person_list)[j];
                 }
             }
 
@@ -367,24 +370,24 @@ namespace stable_matching
         void print(Person &m)
         {
             std::cout << std::setw(8) << members.get(m.id).substr(0, 8) << " :   ";
-            for (auto &pr : m.all_preferences)
+            for (unsigned int j = 0; j < m.all_preferences.size(); j++)
             {
                 std::cout
                     << "[" <<
                     (
-                    m.couple_id.compare(pr) == 0 ?
+                    m.couple_id.compare(m.all_preferences[j]) == 0 ?
                     "O" : " "
                     )
-                    << "] " << std::setw(6) << members.get(pr).substr(0, 6) << " ";
+                    << "] " << std::setw(6) << members.get(m.all_preferences[j]).substr(0, 6) << " ";
             }
             std::cout << std::endl;
         }
 
         void print()
         {
-            for (auto &m : men) print(m);
+            for (unsigned int j = 0; j < men.size(); j++) print(men[j]);
             std::cout << std::endl;
-            for (auto &m : women) print(m);
+            for (unsigned int j = 0; j < women.size(); j++) print(women[j]);
         }
 
         Person* nextSingleMan()

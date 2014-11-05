@@ -96,25 +96,13 @@ namespace stable_matching
         Members getMembers() { return _members; };
         Members getMembers(std::string filter)
         {
-            return _members.copy_filter<Members>(
-                [filter]
-                (Members::iterator it)
-                {
-                    return beginsWith(it->first, filter);
-                }
-            );
+            return _members.copy_filter_begins_with<Members>(filter);
         };
 
         Preferences getPreferences() { return _preferences; };
         Preferences getPreferences(std::string filter)
         {
-            return _preferences.copy_filter<Preferences>(
-                [filter]
-            (Preferences::iterator it)
-            {
-                return beginsWith(it->first, filter);
-            }
-            );
+            return _preferences.copy_filter_begins_with<Preferences>(filter);
         };
 
     private:

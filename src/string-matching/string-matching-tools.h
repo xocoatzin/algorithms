@@ -27,12 +27,12 @@ namespace string_matching
                 std::string sub = pattern.substr(0, l);
 
                 unsigned int max = 0, iteration = 0;
-                auto it = sub.begin();
+                std::string::iterator it = sub.begin();
                 it++;
                 for (; it != sub.end(); it++)
                 {
-                    auto target = it;
-                    auto origin = sub.begin();
+                	std::string::iterator target = it;
+                	std::string::iterator origin = sub.begin();
 
                     unsigned int count = 0;
                     while (target != sub.end() && origin != it)
@@ -65,12 +65,12 @@ namespace string_matching
         BMHTable(std::string pattern) :
             std::vector < unsigned int >(0xFF)
         {
-            for (auto i = begin(); i != end(); i++) *i = pattern.length();
+            for (std::vector < unsigned int >::iterator i = begin(); i != end(); i++) *i = pattern.length();
 
             unsigned int i = 1;
-            for (auto c : pattern)
+            for (std::string::iterator c  = pattern.begin(); c != pattern.end(); c++)
             {
-                at(static_cast<unsigned int>(c)) = i++;
+                at(static_cast<unsigned int>(*c)) = i++;
             }
         }
     };

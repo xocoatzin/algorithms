@@ -60,9 +60,9 @@ namespace tools
     {
         unsigned int i = 0;
         bool _match = true;
-        for (auto &c : pattern)
+        for (std::string::iterator it = pattern.begin(); it != pattern.end(); ++it)
         {
-            if (str.at(offset + i++) != c)
+            if (str.at(offset + i++) != *it)
             {
                 _match = false;
                 break;
