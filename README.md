@@ -49,7 +49,7 @@ You can get a free copy of VS2013 on http://www.visualstudio.com/en-us/downloads
 
 ####Linux:
 
-1. From the command line (you'll need a c++11 compatible compiler, GCC 4.7 recommended):
+1. From the command line (you'll need a c++ compiler, GCC 4.7 recommended):
 
 ```bash
 cd build/makefiles/stable-matching/
