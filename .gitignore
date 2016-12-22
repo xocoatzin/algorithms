@@ -1,3 +1,9 @@
+# build files
+build/makefiles/max-flow/max-flow
+build/makefiles/simplex/simplex
+build/makefiles/stable-matching/stable-matching
+build/makefiles/string-matching/string-matching
+
 # Compiled Object files
 *.slo
 *.lo

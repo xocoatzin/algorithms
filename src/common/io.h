@@ -7,6 +7,7 @@
 #include <locale>
 #include <fstream>
 #include <string>
+#include <iostream>
 
 #include "string.h"
 
